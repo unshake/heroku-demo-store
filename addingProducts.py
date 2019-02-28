@@ -41,7 +41,7 @@ storeProduct3 = Products(name="Levis 505 Jeans", id = "LVS_BJ", description = "L
 session.add(storeProduct3)
 session.commit()
 
-storeProduct4 = Products(name="Polo Shirt2", id = "GAP_LJ", description = "GAP loose type jeans", 
+storeProduct4 = Products(name="GAP Jeans", id = "GAP_LJ", description = "GAP loose type jeans", 
                      price = 35, size = "32x30", brand = "GAP", color = "Washed Blue" )
 
 session.add(storeProduct4)

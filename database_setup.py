@@ -14,6 +14,14 @@ class Users(Base):
     name = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
     carrito_total = Column(Integer, nullable=True)
+
+    @property
+    def serialize(self):
+       
+       return {
+           'name'         : self.name,
+           'id'         : self.id,
+       }
  
 class Products(Base):
     __tablename__ = 'products'

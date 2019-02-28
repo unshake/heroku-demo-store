@@ -18,11 +18,10 @@ def storeProductsJSON():
 	allProducts = session.query(Products)
 	return jsonify(Products=[p.serialize for p in allProducts])
 
-#@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-#def restaurantMenuItemJSON(restaurant_id, menu_id):
-#	
-#	items = session.query(MenuItem).filter_by(id=menu_id).one()
-#	return jsonify(MenuCosas=items.serialize)
+@app.route('/home/users/')
+def storeUsersJSON():
+	allUsers = session.query(Users)
+	return jsonify(Users=[u.serialize for u in allUsers])
 	
 
 #Estos son los endpoints de la aplicacion

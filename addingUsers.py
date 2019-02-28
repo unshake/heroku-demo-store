@@ -35,3 +35,12 @@ user2 = Users(name="Rene Mejia", id="monolet@gmail.com", password="monolet", car
 session.add(user2)
 session.commit()
 
+user3 = Users(name="John Cuevas", id = "john@cuevas.com", password = "cuevas", carrito_total = 0)
+
+session.add(user3)
+session.commit()
+
+user4 = Users(name="Peluso Perro", id="peluso@perro.com", password="peluso", carrito_total=0)
+session.add(user4)
+session.commit()
+
