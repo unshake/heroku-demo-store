@@ -16,7 +16,7 @@ session = DBSession()
 @app.route('/home/products/JSON')
 def storeProductsJSON():
 	allProducts = session.query(Products)
-	return jsonify(MenuItems=[p.serialize for p in allProducts])
+	return jsonify(Products=[p.serialize for p in allProducts])
 
 #@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
 #def restaurantMenuItemJSON(restaurant_id, menu_id):
