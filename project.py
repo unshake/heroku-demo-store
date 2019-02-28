@@ -13,11 +13,10 @@ session = DBSession()
 
 #Codigo para enviar informacion en JSON
 
-#@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
-#def restaurantMenuJSON(restaurant_id):
-#	restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-#	items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
-#	return jsonify(MenuItems=[i.serialize for i in items])
+@app.route('/home/products/JSON')
+def storeProductsJSON():
+	allProducts = session.query(Products)
+	return jsonify(MenuItems=[p.serialize for p in allProducts])
 
 #@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
 #def restaurantMenuItemJSON(restaurant_id, menu_id):
@@ -84,6 +83,6 @@ def signUp():
 
 
 if __name__ == '__main__':
-	#app.secret_key = 'super_secret'
+	app.secret_key = 'super_secret'
 	app.debug = True
 	app.run(host='0.0.0.0', port=5000)

@@ -27,17 +27,7 @@ class Products(Base):
     brand = Column(String(250))
     color = Column(String(250))
 
-
-class ShoppingCart(Base):
-    __tablename__ = 'Shopping_Cart'
-
-    id = Column(Integer, primary_key=True)
-    product_id = Column(Integer)
-    total = Column(Integer)
-    user_id = Column(String(250), ForeignKey('users.id'))
-    user = relationship(Users)
-
-#We added this serialize function to be able to send JSON objects in a serializable format
+    #We added this serialize function to be able to send JSON objects in a serializable format
     @property
     def serialize(self):
        
@@ -50,9 +40,21 @@ class ShoppingCart(Base):
            'brand'         : self.brand,
            'color'         : self.color,
        }
+
+
+class ShoppingCart(Base):
+    __tablename__ = 'Shopping_Cart'
+
+    id = Column(Integer, primary_key=True)
+    product_id = Column(Integer)
+    total = Column(Integer)
+    user_id = Column(String(250), ForeignKey('users.id'))
+    user = relationship(Users)
+
+
  
 
-engine = create_engine('sqlite:///demostore_flask.db')
+engine = create_engine('sqlite:///demostore_flask.db?check_same_thread=False')
  
 
 Base.metadata.create_all(engine)
