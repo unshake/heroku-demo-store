@@ -13,15 +13,45 @@ session = DBSession()
 
 #Codigo para enviar informacion en JSON
 
-@app.route('/home/products/JSON')
-def storeProductsJSON():
+@app.route('/home/products/all')
+def allStoreProductsJSON():
 	allProducts = session.query(Products)
 	return jsonify(Products=[p.serialize for p in allProducts])
 
-@app.route('/home/users/')
-def storeUsersJSON():
-	allUsers = session.query(Users)
-	return jsonify(Users=[u.serialize for u in allUsers])
+
+@app.route('/home/users/<string:api_key>') #/home/users/all&key=API_KEY
+def allStoreUsersJSON(api_key):
+	keyDecoded = api_key.split("&key=")
+	if keyDecoded[0] == "all":
+		if keyDecoded[1] == "DemoStoreKey":
+			allUsers = session.query(Users)
+			return jsonify(Users=[u.serialize for u in allUsers])
+		else:
+			output = "<html><body><h1>You are not alowed to access this information!</h1></body></html>"
+			return output
+	else:
+		output = "<html><body><h1>Incorrect EndPoint!</h1></body></html>"
+		return output
+
+
+@app.route('/home/users/id/<string:user_id>')
+def oneStoreUserJSON(user_id):
+	keyDecoded = user_id.split("&key=")
+	user_id = keyDecoded[0]
+	api_key = keyDecoded[1] 
+	if api_key == "DemoStoreKey":
+		selectedUser = session.query(Users).filter_by(id=user_id).one()
+		return jsonify(User=selectedUser.serialize)
+
+	else:
+		output = "<html><body><h1>You are not alowed to access this information!</h1></body></html>"
+		return output
+
+
+@app.route('/home/products/brand/<string:product_brand>')
+def oneStoreProductJSON(product_brand):
+	selectedProduct = session.query(Products).filter_by(brand=product_brand).one()
+	return jsonify(Product=selectedProduct.serialize)
 	
 
 #Estos son los endpoints de la aplicacion
