@@ -94,7 +94,8 @@ def signIn():
 				else:
 					#flash("Wrong Password")
 					return redirect(url_for('signIn'))
-		
+			else:
+				return redirect(url_for('signUp'))
 		
 	else:
 		return render_template('signIn.html')
