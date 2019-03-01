@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, jsonify
+from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Users, Products, ShoppingCart
 
 app = Flask(__name__)
+CORS(app)
 
 engine = create_engine('sqlite:///demostore_flask.db?check_same_thread=False')
 Base.metadata.bind = engine
