@@ -61,13 +61,10 @@ def userLogIn():
 					return jsonify({'token':token.decode('UTF-8')})
 					
 				else:
-					
 					return redirect(url_for('userLogIn'))
 			
 		return redirect(url_for('userRegister'))
-		
 
-	
 	else:
 		return render_template('LogIn.html')
 
@@ -85,14 +82,26 @@ def addProducts():
 	else:
 		return render_template('addProducts.html')
 
-@app.route('/api/v0/register/')
+
+@app.route('/api/v0/register/', methods=['GET', 'POST'])
 def userRegister():
-	return "To be implemented"
+	if request.method == 'POST':
+		newUser = Users(name = request.form['name'], id = request.form['id'], password = request.form['password'])
+		session.add(newUser)
+		session.commit()
+		
+		return redirect(url_for('showProducts'))
+	else:
+		return render_template('userRegister.html')
 
 @app.route('/api/v0/products/cart/')
 def addToCart():
 	return "To be implemented"
 
+@app.route('/api/v0/users/show/')
+def showUsers():
+	allUsers = session.query(Users)
+	return jsonify(Users=[u.serialize for u in allUsers])
 
 
 
