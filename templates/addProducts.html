@@ -1,0 +1,31 @@
+<html>
+
+<body>
+
+<h1>Add a New Product</h1>
+
+<form action= "{{url_for('addProducts')}}" method = 'POST'>
+
+    Name:<br>
+    <input type = 'text' size='30' name = 'name'><br>
+    ID:<br>
+    <input type = 'text' size='30' name = 'id'><br>
+    Description:<br>
+    <input type = 'text' size='30' name = 'description'><br>
+    Price:<br>
+    <input type = 'text' size='30' name = 'price'><br>
+    Size:<br>
+    <input type = 'text' size='30' name = 'size'><br>
+    Brand:<br>
+    <input type = 'text' size='30' name = 'brand'><br>
+    Color:<br>
+    <input type = 'text' size='30' name = 'color'><br>
+
+    
+    <input type='submit' value='Create'>
+</form>
+
+
+</body>
+
+</html>

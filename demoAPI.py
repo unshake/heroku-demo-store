@@ -37,9 +37,15 @@ def tokenOK(f):
 
 @app.route('/')
 @app.route('/api/v0/products/')
-def unloggedUser_Products():
+def showProducts():
 	allProducts = session.query(Products)
 	return jsonify(Products=[p.serialize for p in allProducts])
+
+@app.route('/api/v0/products/user')
+@tokenOK
+def iShowProducts():
+	allProducts = session.query(Products).all()
+	return render_template('productsUser.html', products = allProducts)
 
 @app.route('/api/v0/login/', methods=['GET', 'POST'])
 def userLogIn():
@@ -67,13 +73,24 @@ def userLogIn():
 
 
 
-@app.route('/api/v0/products/user')
-@tokenOK
-def loggedUser_Products():
-	return "You have access"
+@app.route('/api/v0/products/add', methods=['GET', 'POST'])
+def addProducts():
+	if request.method == 'POST':
+		newProduct = Products(name = request.form['name'], id = request.form['id'], description = request.form['description'],
+			price=request.form['price'], size=request.form['size'], brand=request.form['brand'], color=request.form['color'])
+		session.add(newProduct)
+		session.commit()
+		
+		return redirect(url_for('showProducts'))
+	else:
+		return render_template('addProducts.html')
 
 @app.route('/api/v0/register/')
 def userRegister():
+	return "To be implemented"
+
+@app.route('/api/v0/products/cart/')
+def addToCart():
 	return "To be implemented"
 
 
