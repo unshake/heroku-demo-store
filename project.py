@@ -29,7 +29,7 @@ def allStoreUsersJSON(api_key):
 			allUsers = session.query(Users)
 			return jsonify(Users=[u.serialize for u in allUsers])
 		else:
-			output = "<html><body><h1>You are not alowed to access this information!</h1></body></html>"
+			output = "<html><body><h1>You are not alowed to access this information!!!</h1></body></html>"
 			return output
 	else:
 		output = "<html><body><h1>Incorrect EndPoint!</h1></body></html>"
