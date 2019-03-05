@@ -1,0 +1,28 @@
+<html>
+
+<body>
+
+<h1>Product's Catalog</h1>
+
+
+{% for p in products %}
+
+<div>
+
+<b>Item:</b>{{p.name}}<br>
+
+<b>Price: </b> ${{p.price}}<br>
+
+<a href='{{url_for('addToCart') }}'>Add to Cart</a><br>
+
+
+<br>
+
+
+</div>
+
+
+{% endfor %}
+</body>
+
+</html>
