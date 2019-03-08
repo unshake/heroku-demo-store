@@ -69,6 +69,10 @@ def userLogIn():
 	if request.method == 'POST':
 		idUser = request.form['id']
 		passUser = request.form['password']
+		if idUser == "":
+			return jsonify({'message':'Empty e-mail field. Please enter your e-mail.'})
+		if passUser == "":
+			return jsonify({'message':'Empty password field. Please enter your password'})
 		if not isEmailValid(idUser): #verifico formato de e-mail
 			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
 		if not isPasswordValid(passUser): #verifico formato de password
@@ -108,8 +112,15 @@ def addProducts():
 @app.route('/api/v0/register/', methods=['GET', 'POST'])
 def userRegister():
 	if request.method == 'POST':
+		nameUser = request.form['name']
 		idUser = request.form['id']
 		passUser = request.form['password']
+		if nameUser == "":
+			return jsonify({'message':'Empty Name field. Please provide a name.'})
+		if idUser == "":
+			return jsonify({'message':'Empty e-mail field. Please provide your user e-mail.'})
+		if passUser == "":
+			return jsonify({'message':'Empty password field. Please provide your password'})
 		if not isEmailValid(idUser): #verifico formato de e-mail
 			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
 		if not isPasswordValid(passUser): #verifico formato de password
