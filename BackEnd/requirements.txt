@@ -8,4 +8,6 @@ SQLAlchemy==1.2.18
 Werkzeug==0.14.1
 flask-cors
 pyjwt
+pyDNS
+validate_email
 

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, jsonify, make_response
-import jwt
-import datetime
+import jwt, datetime, re 
+from validate_email import validate_email
 from functools import wraps
 from flask_cors import CORS
 from sqlalchemy import create_engine
@@ -15,7 +15,23 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
+#
+# Email format verification function
+def isEmailValid(email):
+	return validate_email(email)
+#Password fortmat verification function
+def isPasswordValid(password):
+	if len(password) >= 8:
+		if not re.search('\s', password):
+			if re.search(r"(?=.*[A-Z])(?=.*[*&@%+/'!#$?:,`_.\-])",password):
+				return True
+			else:
+				return False
+		else:
+			return False
+		
+	else:
+		return False
 #Decorator para verificar logIn
 def tokenOK(f):
 	@wraps(f)
@@ -53,6 +69,11 @@ def userLogIn():
 	if request.method == 'POST':
 		idUser = request.form['id']
 		passUser = request.form['password']
+		if not isEmailValid(idUser): #verifico formato de e-mail
+			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: "example@example.com"'})
+		if not isPasswordValid(passUser): #verifico formato de password
+			return jsonify({'message': "Invalid password format. It MUST include at least 8 characters, 1 Uppercase letter and 1 of the following symbols: *&@%+/'!#$?:,`_.-"})
+		
 		allUsers = session.query(Users).all()
 		for user in allUsers:
 			if user.id == idUser:
@@ -71,6 +92,7 @@ def userLogIn():
 
 
 @app.route('/api/v0/products/add', methods=['GET', 'POST'])
+@tokenOK
 def addProducts():
 	if request.method == 'POST':
 		newProduct = Products(name = request.form['name'], id = request.form['id'], description = request.form['description'],
@@ -86,12 +108,19 @@ def addProducts():
 @app.route('/api/v0/register/', methods=['GET', 'POST'])
 def userRegister():
 	if request.method == 'POST':
+		idUser = request.form['id']
+		passUser = request.form['password']
+		if not isEmailValid(idUser): #verifico formato de e-mail
+			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
+		if not isPasswordValid(passUser): #verifico formato de password
+			return jsonify({'message': "Invalid password format. It MUST include at least 8 characters, 1 Uppercase letter and 1 of the following symbols: *&@%+/'!#$?:,`_.-"})
 		newUser = Users(name = request.form['name'], id = request.form['id'], password = request.form['password'])
 		session.add(newUser)
 		session.commit()
 		
-		return redirect(url_for('showProducts'))
+		return redirect(url_for('userLogIn'))
 	else:
+		
 		return render_template('userRegister.html')
 
 @app.route('/api/v0/products/cart/')
