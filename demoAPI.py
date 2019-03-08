@@ -70,7 +70,7 @@ def userLogIn():
 		idUser = request.form['id']
 		passUser = request.form['password']
 		if not isEmailValid(idUser): #verifico formato de e-mail
-			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: "example@example.com"'})
+			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
 		if not isPasswordValid(passUser): #verifico formato de password
 			return jsonify({'message': "Invalid password format. It MUST include at least 8 characters, 1 Uppercase letter and 1 of the following symbols: *&@%+/'!#$?:,`_.-"})
 		
