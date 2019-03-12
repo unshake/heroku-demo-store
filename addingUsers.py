@@ -26,21 +26,21 @@ session = DBSession()
 
 
 #-------------------Users Registration--------------------------
-user1 = Users(name="Edgar Martinez", id = "monolet@hotmail.com", password = "monolet", carrito_total = 0)
+user1 = Users(name="Edgar Martinez", id = "monolet@hotmail.com", password = "*Monolet", keyword = 'mi_palabra', carrito_total = 0)
 
 session.add(user1)
 session.commit()
 
-user2 = Users(name="Rene Mejia", id="monolet@gmail.com", password="monolet", carrito_total=0)
+user2 = Users(name="Rene Mejia", id="monolet@gmail.com", password="*Monolet", keyword = 'mi_palabra', carrito_total=0)
 session.add(user2)
 session.commit()
 
-user3 = Users(name="John Cuevas", id = "john@cuevas.com", password = "cuevas", carrito_total = 0)
+user3 = Users(name="John Cuevas", id = "john@cuevas.com", password = "*Cuevitas", keyword = 'deer', carrito_total = 0)
 
 session.add(user3)
 session.commit()
 
-user4 = Users(name="Peluso Perro", id="peluso@perro.com", password="peluso", carrito_total=0)
+user4 = Users(name="Peluso Perro", id="peluso@perro.com", password="*Pelusos", keyword = 'canino', carrito_total=0)
 session.add(user4)
 session.commit()
 

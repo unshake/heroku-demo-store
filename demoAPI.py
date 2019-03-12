@@ -96,7 +96,7 @@ def userLogIn():
 
 
 @app.route('/api/v0/products/add', methods=['GET', 'POST'])
-@tokenOK
+#@tokenOK
 def addProducts():
 	if request.method == 'POST':
 		newProduct = Products(name = request.form['name'], id = request.form['id'], description = request.form['description'],
@@ -143,6 +143,45 @@ def showUsers():
 	allUsers = session.query(Users)
 	return jsonify(Users=[u.serialize for u in allUsers])
 
+@app.route('/api/v0/users/recovery/', methods=['GET', 'POST'])
+def passwordRecovery():
+	if request.method == 'POST':
+		idUser = request.form['id']
+		keyUser = request.form['keyword']
+		if idUser == "":
+			return jsonify({'message':'Empty e-mail field. Please provide your user e-mail.'})
+		if keyUser == "":
+			return jsonify({'message':'Empty keyword field. Please provide your user keyword.'})
+		if not isEmailValid(idUser): #verifico formato de e-mail
+			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
+		toEditUser = session.query(Users).filter_by(id = idUser).scalar()
+		
+		if toEditUser: #Verifico si existe el usuario
+			if toEditUser.keyword == keyUser:
+				newPassword = request.form['newPassword']
+				if newPassword == "":
+					return jsonify({'message':'Empty password field. Please provide your password'})
+				if not isPasswordValid(newPassword): #verifico formato de password
+					return jsonify({'message': "Invalid password format. It MUST include at least 8 characters, 1 Uppercase letter and 1 of the following symbols: *&@%+/'!#$?:,`_.-"})
+				if toEditUser.password != newPassword:
+					toEditUser.password = newPassword
+				else:
+					return jsonify({'message': 'You have used that password before. Choose another one'})
+
+		else:
+			return jsonify({'message': 'User not found'})
+
+		
+		session.add(toEditUser)
+		session.commit()
+		return redirect(url_for('userLogIn'))
+
+	else:
+		return render_template('passwordRecovery.html')
+
+@app.route('/api/v0/users/password/new/', methods=['GET', 'POST'])
+def passwordNew():
+	return "to be implemented"
 
 
 
