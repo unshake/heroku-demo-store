@@ -13,6 +13,7 @@ class Users(Base):
     id = Column(String(250), primary_key=True)
     name = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
+    keyword = Column(String(250), nullable=False)
     carrito_total = Column(Integer, nullable=True)
 
     @property
