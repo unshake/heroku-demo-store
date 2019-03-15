@@ -4,7 +4,7 @@
 
 <h1>Product's Catalog</h1>
 
-<a href='{{url_for('addProducts') }}'>Add Product</a><br><br>
+<a href='{{url_for('addProducts', uToken = userToken)}}'>Add Product</a><br><br>
 <a href='{{url_for('userLogOut', logOutToken = userToken)}}'>Log Out</a><br><br>
 
 

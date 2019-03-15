@@ -90,9 +90,9 @@ def userLogIn():
 					return jsonify({'token':token.decode('UTF-8')})
 					
 				else:
-					return redirect(url_for('userLogIn'))
-			
-		return redirect(url_for('userRegister'))
+					return jsonify({'message': 'Incorrect Password. Please try again.'})
+					
+		return jsonify({'message':'User not found. Please create an account'})
 
 	else:
 		return render_template('LogIn.html')
@@ -105,18 +105,24 @@ def userLogOut(logOutToken):
 	return jsonify({'message':'Logged Out'})
 
 
-@app.route('/api/v0/products/add', methods=['GET', 'POST'])
-#@tokenOK
-def addProducts():
+@app.route('/api/v0/products/add/<string:uToken>', methods=['GET', 'POST'])
+def addProducts(uToken):
 	if request.method == 'POST':
-		newProduct = Products(name = request.form['name'], id = request.form['id'], description = request.form['description'],
-			price=request.form['price'], size=request.form['size'], brand=request.form['brand'], color=request.form['color'])
-		session.add(newProduct)
-		session.commit()
+		if request.form['name']=="":
+			return jsonify({'message':'Please enter the product name'})
+		if request.form['id']=="":
+			return jsonify({'message':'Please enter the product ID'})
+		try:
+			newProduct = Products(name = request.form['name'], id = request.form['id'], description = request.form['description'],
+				price=request.form['price'], size=request.form['size'], brand=request.form['brand'], color=request.form['color'])
+			session.add(newProduct)
+			session.commit()
+		except:
+			return jsonify({'message':'There is a problem with inserting data to the database.'})
 		
 		return redirect(url_for('showProducts'))
 	else:
-		return render_template('addProducts.html')
+		return render_template('addProducts.html', userToken=uToken)
 
 
 @app.route('/api/v0/register/', methods=['GET', 'POST'])

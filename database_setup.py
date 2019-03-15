@@ -30,11 +30,11 @@ class Products(Base):
 
     name =Column(String(80), nullable = False)
     id = Column(String(250), primary_key = True)
-    description = Column(String(250))
-    price = Column(Integer)
-    size = Column(String(250))
-    brand = Column(String(250))
-    color = Column(String(250))
+    description = Column(String(250), nullable = True)
+    price = Column(Integer, nullable = True)
+    size = Column(String(250), nullable = True)
+    brand = Column(String(250), nullable = True)
+    color = Column(String(250), nullable = True)
 
     #We added this serialize function to be able to send JSON objects in a serializable format
     @property
