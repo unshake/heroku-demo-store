@@ -78,10 +78,6 @@ def userLogIn():
 			return jsonify({'message':'Empty e-mail field. Please enter your e-mail.'})
 		if passUser == "":
 			return jsonify({'message':'Empty password field. Please enter your password'})
-		if not isEmailValid(idUser): #verifico formato de e-mail
-			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
-		if not isPasswordValid(passUser): #verifico formato de password
-			return jsonify({'message': "Invalid password format. It MUST include at least 8 characters, 1 Uppercase letter and 1 of the following symbols: *&@%+/'!#$?:,`_.-"})
 		
 		allUsers = session.query(Users).all()
 		for user in allUsers:
@@ -129,20 +125,28 @@ def userRegister():
 		nameUser = request.form['name']
 		idUser = request.form['id']
 		passUser = request.form['password']
+		userKey = request.form['keyword']
 		if nameUser == "":
 			return jsonify({'message':'Empty Name field. Please provide a name.'})
 		if idUser == "":
 			return jsonify({'message':'Empty e-mail field. Please provide your user e-mail.'})
 		if passUser == "":
 			return jsonify({'message':'Empty password field. Please provide your password'})
+		if userKey == "":
+			return jsonify({'message':'Empty keyword field. Please provide a keyword for Password Recovery'})
 		if not isEmailValid(idUser): #verifico formato de e-mail
 			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
 		if not isPasswordValid(passUser): #verifico formato de password
 			return jsonify({'message': "Invalid password format. It MUST include at least 8 characters, 1 Uppercase letter and 1 of the following symbols: *&@%+/'!#$?:,`_.-"})
-		newUser = Users(name = request.form['name'], id = request.form['id'], password = request.form['password'])
-		session.add(newUser)
-		session.commit()
 		
+		try:
+			newUser = Users(name = nameUser, id = idUser, password = passUser, keyword = userKey)
+			session.add(newUser)
+			session.commit()
+		
+		except:
+			return jsonify({'message': 'There is a problem with inserting data to the database.'})
+
 		return redirect(url_for('userLogIn'))
 	else:
 		
@@ -166,8 +170,6 @@ def passwordRecovery():
 			return jsonify({'message':'Empty e-mail field. Please provide your user e-mail.'})
 		if keyUser == "":
 			return jsonify({'message':'Empty keyword field. Please provide your user keyword.'})
-		if not isEmailValid(idUser): #verifico formato de e-mail
-			return jsonify({'message':'Invalid e-mail format. FOLLOW the next format: example@example.com'})
 		toEditUser = session.query(Users).filter_by(id = idUser).scalar()
 		
 		if toEditUser: #Verifico si existe el usuario
@@ -186,9 +188,14 @@ def passwordRecovery():
 		else:
 			return jsonify({'message': 'User not found'})
 
+		try:
+
+			session.add(toEditUser)
+			session.commit()
+		except:
+			return jsonify({'message': 'There is a problem with inserting data to the database'})
+
 		
-		session.add(toEditUser)
-		session.commit()
 		return redirect(url_for('userLogIn'))
 
 	else:
