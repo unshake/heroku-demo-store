@@ -60,6 +60,12 @@ class ShoppingCart(Base):
     user_id = Column(String(250), ForeignKey('users.id'))
     user = relationship(Users)
 
+class tokenBlackList(Base):
+    __tablename__ = 'tokenBlackList'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    token = Column(String(250), nullable=False)
+    
+
 
  
 

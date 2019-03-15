@@ -5,7 +5,7 @@ from functools import wraps
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Users, Products, ShoppingCart
+from database_setup import Base, Users, Products, ShoppingCart, tokenBlackList
 
 app = Flask(__name__)
 CORS(app)
@@ -40,7 +40,11 @@ def tokenOK(f):
 		if not token:
 			return jsonify({'message': 'Token is missing!'})
 		try:
-			data = jwt.decode(token, 'J0hnCu3vas80')
+			isTokenBlackListed = session.query(tokenBlackList).filter_by(token=token).scalar()
+			if isTokenBlackListed:
+				return jsonify({'message': 'Token is invalid. Please log in again.'})
+			else:
+				data = jwt.decode(token, 'J0hnCu3vas80')
 		except:
 			return jsonify({'message': 'Token is invalid'})
 
@@ -60,9 +64,10 @@ def showProducts():
 @app.route('/api/v0/products/user')
 @tokenOK
 def iShowProducts():
+	token = request.args.get('token')
 	allProducts = session.query(Products).all()
-	return render_template('productsUser.html', products = allProducts)
-
+	return render_template('productsUser.html', products = allProducts, userToken = token)
+	
 @app.route('/api/v0/login/', methods=['GET', 'POST'])
 def userLogIn():
 	
@@ -82,7 +87,10 @@ def userLogIn():
 		for user in allUsers:
 			if user.id == idUser:
 				if user.password == passUser:
-					token = jwt.encode({'user': idUser}, 'J0hnCu3vas80')
+					token = jwt.encode({'user': idUser, 
+						'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
+						'iat': datetime.datetime.utcnow()}, 
+						'J0hnCu3vas80')
 					return jsonify({'token':token.decode('UTF-8')})
 					
 				else:
@@ -93,6 +101,12 @@ def userLogIn():
 	else:
 		return render_template('LogIn.html')
 
+@app.route('/api/v0/logout/<string:logOutToken>')
+def userLogOut(logOutToken):
+	blacklistNewToken = tokenBlackList(token=logOutToken)
+	session.add(blacklistNewToken)
+	session.commit()
+	return jsonify({'message':'Logged Out'})
 
 
 @app.route('/api/v0/products/add', methods=['GET', 'POST'])
@@ -167,7 +181,8 @@ def passwordRecovery():
 					toEditUser.password = newPassword
 				else:
 					return jsonify({'message': 'You have used that password before. Choose another one'})
-
+			else:
+				return jsonify({'message': 'Wrong keyword!'})
 		else:
 			return jsonify({'message': 'User not found'})
 
@@ -179,9 +194,7 @@ def passwordRecovery():
 	else:
 		return render_template('passwordRecovery.html')
 
-@app.route('/api/v0/users/password/new/', methods=['GET', 'POST'])
-def passwordNew():
-	return "to be implemented"
+
 
 
 
